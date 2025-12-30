@@ -1,4 +1,5 @@
 import {Object_} from './objects.js';
+import {Name} from './name.js';
 const {Ollama}=require('ollama');
 
 class Character extends Object_ {
@@ -35,9 +36,18 @@ class NPC_AI extends CharacterController {
     haveCharacterAct(response) {
         if (response.status === 'success') {
             console.log('Character has acted!');
-            // Implement AI logic here
+            this.lastAction = JSON.parse(response.data);
+            this.lastAction.timestamp = new Date();
         } else {
             console.error('Error from Ollama:', response.error);
         }
     }
+}
+
+class NPC extends Character {
+    constructor(name, health, attack) {
+        super(name, health, attack);
+        this.controller = new NPC_AI();
+    }
+
 }
