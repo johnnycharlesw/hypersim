@@ -41,7 +41,7 @@ class NPC_AI extends CharacterController {
     constructor(character: Character){
         super(character);
         this.ollamaConnection = new Ollama();
-        this.ollamaConnection.on('response', this.haveCharacterAct);
+        // Note: Ollama client does not expose an 'on' event API in this version; replace with actual request/response calls when integrating.
     }
     haveCharacterAct(response: any) {
         if (response.status === 'success') {

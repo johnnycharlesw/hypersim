@@ -27,11 +27,19 @@
   },
   "dependencies": {
     "electron": "^39.2.7",
-    "ollama": "^0.6.3"
+    "ollama": "^0.6.3",
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
-    "@types/node": "^25.0.3"
+    "@types/node": "^25.0.3",
+    "del": "^8.0.1",
+    "gulp": "^5.0.1",
+    "gulp-cli": "^3.1.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "merge-stream": "^2.0.0",
+    "sass": "^1.97.1",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=18"

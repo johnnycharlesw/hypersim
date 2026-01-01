@@ -2,17 +2,16 @@
  * Animal module
  * Contains basic animal classes
  */
-import {NPC} from './character';
-import {Name} from './name';
+import {NPC} from './character.js';
+import {Name} from './name.js';
 class Animal extends NPC {
-    name: Name;
     type: string; // 'animal' or 'canine' or 'wolf' or 'dog' or 'cat' or 'bird' or 'fish'
-    isFriendly: boolean; // true if the animal is friendly, false otherwise
+    isFriendly: boolean = false; // true if the animal is friendly, false otherwise
     constructor(name: Name, health: number, attack: number) {
         super(name, health, attack);
         this.type = 'animal';
     }
-    makeSound(sound) {
+    makeSound(sound: string) {
         console.log(`${this.name} makes a sound: ${sound}.`);
     }
 }
@@ -31,11 +30,11 @@ class AnimalCanine extends Animal {
         let barkablePieces = ["ruff", "bark", "woof", "awoo", "howl", "grrr", "yip"];
         let stringPieces = sound.split(" ");
         let isBarkable=false;
-        stringPieces.forEach(piece => {
+        stringPieces.forEach((piece: string) => {
             if (barkablePieces.includes(piece.toLowerCase())) {
                 isBarkable=true || isBarkable;
             } else {
-                barkablePieces.forEach(barkable => {
+                barkablePieces.forEach((barkable: string) => {
                     if (barkable.toLowerCase().includes(piece.toLowerCase())) {
                         isBarkable=true || isBarkable;
                     } else {
@@ -77,19 +76,20 @@ class Dog extends AnimalCanine {
 }
 
 class Cat extends Animal {
-    constructor(name: Name, health: number, attack, breed) {
+    breed: string;
+    constructor(name: Name, health: number, attack: number, breed: string) {
         super(name, health, attack);
         this.breed = breed;
     }
 
-    _isSoundMeowable(sound) {
+    _isSoundMeowable(sound: string) {
         let meowablePieces = ["meow", "purr", "whiskers", "purr-purr"];
         let stringPieces = sound.split(" ");
-        let isMeowable = stringPieces.some(piece => meowablePieces.includes(piece.toLowerCase()));
+        let isMeowable = stringPieces.some((piece: string) => meowablePieces.includes(piece.toLowerCase()));
         return isMeowable;
     }
 
-    makeSound(sound) {
+    makeSound(sound: string) {
         if (this._isSoundMeowable(sound)) {
             console.log(`${this.name} meows: ${sound}.`);
         }
@@ -97,7 +97,8 @@ class Cat extends Animal {
 }
 
 class Bird extends Animal {
-    constructor(name: Name, health, attack, species) {
+    species: string;
+    constructor(name: Name, health: number, attack: number, species: string) {
         super(name, health, attack);
         this.species = species;
     }
@@ -111,7 +112,7 @@ class Bird extends Animal {
 
 class Fish extends Animal {
     species: string;
-    constructor(name: Name, health: number, attack, species) {
+    constructor(name: Name, health: number, attack: number, species: string) {
         super(name, health, attack);
         this.species = species;
     }

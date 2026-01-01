@@ -186,12 +186,16 @@ class Border {
     id: number|null = null;
     name: string|null = null;
     location: Vector3D;
-    isInBorder: boolean;
+    private _isInside: boolean;
     constructor(){
         this.id=null;
         this.name=null;
         this.location=new Vector3D(0,0,0);
-        this.isInBorder = false;
+        this._isInside = false;
+    }
+    isInBorder(object: Object_): boolean {
+        // Placeholder for actual boundary computation using object position/hitbox
+        return this._isInside;
     }
 }
 
@@ -212,6 +216,11 @@ class Ocean extends Place {
 }
 
 class Continent extends Place {
+    climate: any;
+    pressure: ObjectPressure|null;
+    mass: ObjectMass|null;
+    hitbox: Hitbox;
+    continentType: string|null;
     constructor(){
         super();
         this.climate = null;
@@ -223,6 +232,10 @@ class Continent extends Place {
 }
 
 class Country extends Place {
+    pressure: ObjectPressure|null;
+    mass: ObjectMass|null;
+    hitbox: Hitbox;
+    countryType: string|null;
     constructor(){
         super();
         this.pressure = null;
