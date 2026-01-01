@@ -1,19 +1,24 @@
 import {Object_} from './objects.js';
 import {Name} from './name.js';
-const {Ollama}=require('ollama');
-
+import {Vector3D} from './vectors.js';
+import {Ollama} from 'ollama';
 class Character extends Object_ {
-    constructor(name, health, attack) {
+    name: Name;
+    health: number;
+    attack: number;
+    controller: CharacterController|null;
+    constructor(name: Name, health: number, attack: number, controller: CharacterController|null) {
         super();
         this.name = name;
         this.health = health;
         this.attack = attack;
+        this.controller = controller;
     }
-    attackEnemy(enemy) {
+    attackEnemy(enemy: Character) {
         enemy.health -= this.attack;
         console.log(`${this.name} attacks ${enemy.name} for ${this.attack} damage.`);
     }
-    moveAround(position) {
+    moveAround(position: Vector3D) {
         super.pushAround(position);
     }
 
@@ -23,17 +28,22 @@ class Character extends Object_ {
 }
 
 class CharacterController {
-    constructor(character) {
+    character: Character;
+    lastAction: any; // Placeholder for the last action taken by the character
+    constructor(character: Character) {
         this.character = character;
+        this.lastAction = null;
     } 
 }
 
 class NPC_AI extends CharacterController {
-    constructor(){
+    ollamaConnection: Ollama;
+    constructor(character: Character){
+        super(character);
         this.ollamaConnection = new Ollama();
         this.ollamaConnection.on('response', this.haveCharacterAct);
     }
-    haveCharacterAct(response) {
+    haveCharacterAct(response: any) {
         if (response.status === 'success') {
             console.log('Character has acted!');
             this.lastAction = JSON.parse(response.data);
@@ -45,9 +55,13 @@ class NPC_AI extends CharacterController {
 }
 
 class NPC extends Character {
-    constructor(name, health, attack) {
-        super(name, health, attack);
-        this.controller = new NPC_AI();
+    isFriendly: boolean = true;
+    constructor(name: Name, health: number, attack: number) {
+        super(name, health, attack, null);
+        this.isFriendly=true;
+        this.controller = new NPC_AI(this);
     }
 
 }
+
+export {NPC, Character, NPC_AI, CharacterController};

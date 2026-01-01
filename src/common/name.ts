@@ -1,5 +1,10 @@
 class Name {
-    constructor(prefixes, firstName, middleName, lastName, suffixes) {
+    prefixes: string[];
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    suffixes: string[];
+    constructor(prefixes: string[], firstName: string, middleName: string, lastName: string, suffixes: string[]) {
         this.prefixes = prefixes;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -41,3 +46,5 @@ class Name {
         return initials.toUpperCase();
     }
 }
+
+export {Name};

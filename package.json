@@ -4,12 +4,36 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "./out/main/main.js",
+  "types": "./out/main/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./out/main/main.d.ts",
+      "import": "./out/main/main.js"
+    },
+    "./common/*": {
+      "types": "./out/common/*.d.ts",
+      "import": "./out/common/*.js"
+    },
+    "./main/*": {
+      "types": "./out/main/*.d.ts",
+      "import": "./out/main/*.js"
+    }
+  },
   "scripts": {
+    "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "electron": "^39.2.7",
     "ollama": "^0.6.3"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.4.38",
+    "@types/node": "^25.0.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

@@ -3,8 +3,12 @@
  * Contains basic animal classes
  */
 import {NPC} from './character';
+import {Name} from './name';
 class Animal extends NPC {
-    constructor(name, health, attack) {
+    name: Name;
+    type: string; // 'animal' or 'canine' or 'wolf' or 'dog' or 'cat' or 'bird' or 'fish'
+    isFriendly: boolean; // true if the animal is friendly, false otherwise
+    constructor(name: Name, health: number, attack: number) {
         super(name, health, attack);
         this.type = 'animal';
     }
@@ -14,32 +18,45 @@ class Animal extends NPC {
 }
 
 class AnimalCanine extends Animal {
-    constructor(name, health, attack, breed) {
+    breed: string;
+    constructor(name: Name, health: number, attack: number, breed: string) {
         super(name, health, attack);
         this.breed = breed;
         this.isFriendly = true;
     }
-    _makeSound(sound) {
+    _makeSound(sound: string) {
         console.log(`${this.name} barks: ${sound}.`);
     }
-    _isSoundBarkable(sound) {
+    _isSoundBarkable(sound: string) {
         let barkablePieces = ["ruff", "bark", "woof", "awoo", "howl", "grrr", "yip"];
         let stringPieces = sound.split(" ");
-        let isBarkable = stringPieces.some(piece => barkablePieces.includes(piece.toLowerCase()));
+        let isBarkable=false;
+        stringPieces.forEach(piece => {
+            if (barkablePieces.includes(piece.toLowerCase())) {
+                isBarkable=true || isBarkable;
+            } else {
+                barkablePieces.forEach(barkable => {
+                    if (barkable.toLowerCase().includes(piece.toLowerCase())) {
+                        isBarkable=true || isBarkable;
+                    } else {
+                        isBarkable=false;
+                    }
+                });
+            }
+        });
         return isBarkable;
     }
-    makeSound(sound) {
+    makeSound(sound: string) {
         this._makeSound(sound);
     }
 }
 
 class Wolf extends AnimalCanine {
-    constructor(name, health, attack, breed) {
-        super(name, health, attack);
-        this.breed = breed;
+    constructor(name: Name, health: number, attack: number) {
+        super(name, health, attack, 'wolf');
         this.isFriendly=false; // what did you expect when thinking it wouldn't be ferocious?
     }
-    makeSound(sound) {
+    makeSound(sound: string) {
         if (this._isSoundBarkable(sound)) {
             console.log(`${this.name} barks: ${sound}.`);
         }
@@ -47,13 +64,12 @@ class Wolf extends AnimalCanine {
 }
 
 class Dog extends AnimalCanine {
-    constructor(name, health, attack, breed) {
-        super(name, health, attack);
-        this.breed = breed;
+    constructor(name: Name, health: number, attack: number, breed: string) {
+        super(name, health, attack, breed);
         this.isFriendly=true;
     }
 
-    makeSound(sound) {
+    makeSound(sound: string) {
         if (this._isSoundBarkable(sound)) {
             console.log(`${this.name} barks: ${sound}.`);
         }
@@ -61,7 +77,7 @@ class Dog extends AnimalCanine {
 }
 
 class Cat extends Animal {
-    constructor(name, health, attack, breed) {
+    constructor(name: Name, health: number, attack, breed) {
         super(name, health, attack);
         this.breed = breed;
     }
@@ -81,27 +97,28 @@ class Cat extends Animal {
 }
 
 class Bird extends Animal {
-    constructor(name, health, attack, species) {
+    constructor(name: Name, health, attack, species) {
         super(name, health, attack);
         this.species = species;
     }
-    _makeSound(sound) {
+    _makeSound(sound: string) {
         console.log(`${this.name} chirps: ${sound}.`);
     }
-    makeSound(sound) {
+    makeSound(sound: string) {
         this._makeSound(sound);
     }
 }
 
 class Fish extends Animal {
-    constructor(name, health, attack, species) {
+    species: string;
+    constructor(name: Name, health: number, attack, species) {
         super(name, health, attack);
         this.species = species;
     }
-    _makeSound(sound) {
+    _makeSound(sound: string) {
         console.log(`${this.name} bubbles: ${sound}.`);
     }
-    makeSound(sound) {
+    makeSound(sound: string) {
         this._makeSound(sound);
     }
 }
