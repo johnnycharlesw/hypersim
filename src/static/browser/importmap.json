@@ -1,0 +1,5 @@
+{
+    "imports": {
+        "aframe": "../../node_modules/aframe/dist/aframe.min.js"
+    }
+}
