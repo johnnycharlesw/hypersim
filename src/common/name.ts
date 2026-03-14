@@ -1,4 +1,4 @@
-class Name {
+export class Name {
     prefixes: string[];
     firstName: string;
     middleName: string;
@@ -47,4 +47,4 @@ class Name {
     }
 }
 
-export {Name};
+export default {Name};

@@ -2,9 +2,9 @@
  * Animal module
  * Contains basic animal classes
  */
-import {NPC} from './character.js';
-import {Name} from './name.js';
-class Animal extends NPC {
+import {NPC} from '../character/NPC.js';
+import {Name} from '../Name.js';
+export class Animal extends NPC {
     type: string; // 'animal' or 'canine' or 'wolf' or 'dog' or 'cat' or 'bird' or 'fish'
     isFriendly: boolean = false; // true if the animal is friendly, false otherwise
     constructor(name: Name, health: number, attack: number) {
@@ -50,7 +50,7 @@ class AnimalCanine extends Animal {
     }
 }
 
-class Wolf extends AnimalCanine {
+export class Wolf extends AnimalCanine {
     constructor(name: Name, health: number, attack: number) {
         super(name, health, attack, 'wolf');
         this.isFriendly=false; // what did you expect when thinking it wouldn't be ferocious?
@@ -62,7 +62,7 @@ class Wolf extends AnimalCanine {
     }
 }
 
-class Dog extends AnimalCanine {
+export class Dog extends AnimalCanine {
     constructor(name: Name, health: number, attack: number, breed: string) {
         super(name, health, attack, breed);
         this.isFriendly=true;
@@ -75,7 +75,7 @@ class Dog extends AnimalCanine {
     }
 }
 
-class Cat extends Animal {
+export class Cat extends Animal {
     breed: string;
     constructor(name: Name, health: number, attack: number, breed: string) {
         super(name, health, attack);
@@ -96,7 +96,7 @@ class Cat extends Animal {
     }
 }
 
-class Bird extends Animal {
+export class Bird extends Animal {
     species: string;
     constructor(name: Name, health: number, attack: number, species: string) {
         super(name, health, attack);
@@ -110,7 +110,7 @@ class Bird extends Animal {
     }
 }
 
-class Fish extends Animal {
+export class Fish extends Animal {
     species: string;
     constructor(name: Name, health: number, attack: number, species: string) {
         super(name, health, attack);
@@ -123,3 +123,5 @@ class Fish extends Animal {
         this._makeSound(sound);
     }
 }
+
+export default this;
