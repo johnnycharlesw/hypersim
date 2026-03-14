@@ -1,4 +1,11 @@
-import {Animal, Wolf, Dog, Bird, Fish} from '../common/animal/index.js';
-import {Character, CharacterController, NPC_AI, NPC} from '../common/character.js';
+import { LifeForm } from '../common/entity/LifeForm.js';
+import { Wolf } from '../common/entity/Wolf.js';
+import { Dog } from '../common/entity/Dog.js';
+import { Bird } from '../common/entity/Bird.js';
+import { Fish } from '../common/entity/Fish.js';
+import { Character } from '../common/character/Character.js';
+import { CharacterController } from '../common/character/CharacterController.js';
+import { NPC_AI } from '../common/character/NPC_AI.js';
+import { NPC } from '../common/character/NPC.js';
 import { Name } from '../common/Name.js';
 import { Vector2D, Vector3D } from '../common/vectors.js';
