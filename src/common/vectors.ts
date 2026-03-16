@@ -1,4 +1,4 @@
-class Vector2D {
+export class Vector2D {
     x: number;
     y: number;
     constructor(x: number, y: number) {
@@ -11,7 +11,7 @@ class Vector2D {
     }
 }
 
-class Vector3D extends Vector2D {
+export class Vector3D extends Vector2D {
     z: number;
     constructor(x: number, y: number, z: number) {
         super(x, y);
@@ -22,5 +22,3 @@ class Vector3D extends Vector2D {
         this.z += vector.z;
     }
 }
-
-export {Vector2D, Vector3D};

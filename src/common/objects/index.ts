@@ -1,6 +1,6 @@
-import {Vector2D, Vector3D} from './vectors.js';
+import {Vector2D, Vector3D} from '../vectors.js';
 
-class ObjectTemperature {
+export class ObjectTemperature {
     fahrenheit: number|null = null;
     constructor () {
         this.fahrenheit = null;
@@ -15,7 +15,7 @@ class ObjectTemperature {
     }
 }
 
-class ObjectPressure {
+export class ObjectPressure {
     pascal: number|null=null;
     constructor () {
         this.pascal = null;
@@ -28,7 +28,7 @@ class ObjectPressure {
     }
 }
 
-class ObjectMass {
+export class ObjectMass {
     kilograms: number|null = null;
     constructor () {
         this.kilograms = null;
@@ -41,7 +41,7 @@ class ObjectMass {
     }
 }
 
-class Hitbox {
+export class Hitbox {
     width: number|null = null;
     height: number|null = null;
     depth: number|null = null;
@@ -84,7 +84,7 @@ class Hitbox {
     }
 }
 
-class Object_ { // _ at the end to avoid conflicts with built-in JavaScript objects
+export class Object_ { // _ at the end to avoid conflicts with built-in JavaScript objects
     temperature: ObjectTemperature;
     pressure: ObjectPressure;
     mass: ObjectMass;
@@ -155,5 +155,3 @@ class Object_ { // _ at the end to avoid conflicts with built-in JavaScript obje
         console.log("Object is moving");
     }
 }
-
-export {Object_, ObjectTemperature, ObjectPressure, ObjectMass, Hitbox};
