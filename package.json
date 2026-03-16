@@ -26,10 +26,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "@types/aframe": "^1.2.9",
     "aframe": "^1.7.1",
     "electron": "^39.2.7",
     "ollama": "^0.6.3",
+    "socket.io": "^4.8.3",
     "three": "^0.182.0"
   },
   "devDependencies": {

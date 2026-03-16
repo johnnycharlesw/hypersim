@@ -2,7 +2,9 @@
 // This file is compiled to out/browser/mainview.js by tsc
 
 import AFRAME from 'aframe';
-AFRAME.registerComponent('hypersim-renderer', ()=>{});
+AFRAME.registerComponent('hypersim', ()=>{
+    
+});
 import {Animal, Wolf, Dog, Bird, Fish} from '../common/animal/index.js';
 import {Character, CharacterController, NPC_AI, NPC} from '../common/character.js';
 import { Name } from '../common/Name.js';

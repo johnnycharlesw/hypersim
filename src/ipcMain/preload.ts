@@ -4,5 +4,15 @@ class ElectronApi {
     getCameraPosition() {
         return Electron.ipcRenderer.invoke('get-camera-position');
     }
+    pauseGame() {
+        
+        pauseGame();
+        
+    }
+
+    resumeGame(){
+        resumeGame();
+    }
+    
 }
-Electron.contextBridge.exposeInMainWorld('electronAPI', new ElectronApi)
+Electron.contextBridge.exposeInMainWorld('electronAPI', new ElectronApi());
