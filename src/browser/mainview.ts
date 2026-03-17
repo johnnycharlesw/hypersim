@@ -1,3 +1,10 @@
+// Basic Three.js setup and render loop
+// This file is compiled to out/browser/mainview.js by tsc
+
+import AFRAME from 'aframe';
+AFRAME.registerComponent('hypersim', ()=>{
+    
+});
 import { LifeForm } from '../common/entity/LifeForm.js';
 import { Wolf } from '../common/entity/Wolf.js';
 import { Dog } from '../common/entity/Dog.js';
