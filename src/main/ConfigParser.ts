@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import toml from '@iarna/toml';
 
-class ConfigParser {
+export class ConfigParser {
     configFile: string = 'game.config.toml';
     config: object;
     constructor(configFile: string | null | undefined){
