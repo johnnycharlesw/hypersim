@@ -4,3 +4,4 @@ import { ObjectPressure } from './ObjectPressure.js';
 import { ObjectMass } from './ObjectMass.js';
 import { Hitbox } from '../physics/Hitbox.js';
 import { Object_ } from './Object_.js';
+export {Vector2D, Vector3D, ObjectTemperature, ObjectPressure, ObjectMass, Hitbox, Object_};

@@ -1,4 +1,4 @@
-interface AComponent {
+export interface AComponent {
     schema: object;
     init(): null;
     update(): null;

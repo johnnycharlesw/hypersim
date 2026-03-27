@@ -24,6 +24,7 @@ class AtomicGrid3D extends Grid3D {
             });
         });
 
-        return voxelCount * 
+        // return voxelCount * server.voxelDensity;
+        return 0;
     }
 }

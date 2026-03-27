@@ -1,5 +1,5 @@
-import { AComponent } from './AComponent.js';
-class HypersimComponent implements AComponent{
+import type { AComponent } from './AComponent.js';
+export class HypersimComponent implements AComponent{
     schema: object;
     constructor(){
         this.schema={
@@ -9,8 +9,26 @@ class HypersimComponent implements AComponent{
         }
     }
 
-    init(){
+    init(): null{
 
+        return null;
     }
 
+    update(): null {
+        return null;
+    }
+    tick(): null {
+        return null;
+    }
+    pause(): null {
+        return null;
+    }
+
+    play(): null {
+        return null;
+    }
+
+    remove(): null {
+        return null;
+    }
 }

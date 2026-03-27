@@ -1,6 +1,6 @@
 import { StatesOfMatter } from "../objects/models/StatesOfMatter.js";
 
-export const MatterStateCollisionRules: Record<StatesOfMatter, Record<StatesOfMatter, boolean>> {
+export const MatterStateCollisionRules: Record<StatesOfMatter, Record<StatesOfMatter, boolean>> = {
     [StatesOfMatter.Solid]: {
         [StatesOfMatter.Solid]: true, // Solids collide with each other
         [StatesOfMatter.Liquid]: true, // Solids block liquids
@@ -28,12 +28,12 @@ export const MatterStateCollisionRules: Record<StatesOfMatter, Record<StatesOfMa
         [StatesOfMatter.Gas]: false, // However, it is never a gas
         [StatesOfMatter.BoseEinsteinCondensate]: true,
         [StatesOfMatter.Plasma]: true,
-    }
+    },
     [StatesOfMatter.Plasma]: {
         [StatesOfMatter.Solid]: true,
         [StatesOfMatter.Liquid]: true,
         [StatesOfMatter.Gas]: true,
         [StatesOfMatter.Plasma]: true,
-        [StatesOfMatter.BoseEinsteinCondensate]: true
-    }
-}
+        [StatesOfMatter.BoseEinsteinCondensate]: true,
+    },
+};

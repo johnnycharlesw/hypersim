@@ -20,6 +20,6 @@
 * const you: Player = server.getPlayer("{{{username}}}");
 * Vote {{{username}}} for Chief Modder!
 * Here be no dragons!
-* Under 100 sold (actually, technically, none exactly sold)
+* Under 100 sold (actually, technically, none exactly "sold")
 * ES5 + 1 = ES6
-* 
+* Based on A-Frame {{{AFRAME.version}}}, Electron {{{process.electron}}}

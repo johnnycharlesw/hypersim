@@ -6,10 +6,27 @@
     <title>Project Hypersim</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../phpizza-ui-framework/style.css">
+    <link rel="stylesheet" href="titlescreen.css">
 </head>
 <body>
-    <script type="importmap" src="importmap.json"></script>
-    <script src="mainview.js"></script>
-    <a-scene inspector hypersim></a-scene>
+    <div class="title-screen-wrapper">
+        <h1>Hypersim</h1>
+        <span id="splash"></span>
+        <ul>
+            <li>
+                <a href="play.html" class="btn">
+                    <i data-feather="play"></i>
+                    Play
+                </a>
+            </li>
+            <li>
+                <a href="settings.html" class="btn">Settings</a>
+            </li>
+            <li>
+                <button onclick="window.close();">Quit Game</button>
+            </li>
+        </ul>
+    </div>
+    <script src="titlescreen.js"></script>
 </body>
 </html>

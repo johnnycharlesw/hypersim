@@ -3,7 +3,7 @@ import { Name } from "../../../Name.js";
 export class Euryarchaeota extends Archaea {
     species: string;
     constructor(name: Name, health: number, attack: number, species: string) {
-        super(name, health, attack);
+        super(name, health, attack, species);
         this.species = species;
     }
     _makeSound(sound: string) {
