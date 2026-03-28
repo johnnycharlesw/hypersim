@@ -1,4 +1,4 @@
-import { Vector2D } from "../../common/vectors.js";
+import { Vector2D } from "../../../common/vectors.js";
 
 enum AssetType{
     _3d_Model,

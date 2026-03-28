@@ -4,6 +4,8 @@ import {feather} from 'feather-icons';
 
 let splash = document.getElementById('splash');
 let marked_ = new marked.Marked();
+let username = "FocusPup824";
+let splashes: string[] = [];
 // Use fetch to load the splashes.md file
 fetch('splashes.md')
   .then((response) => {
@@ -14,10 +16,9 @@ fetch('splashes.md')
   })
   .then((splashesMd) => {
     console.log("File content:", splashesMd);
-
     // Parse the Markdown content
     let splashesHtml = marked_.parse(splashesMd);
-    console.log("Parsed HTML:", splashesHtml);
+    console.log("Parsed HTML:", splashesHtml.toString());
 
     // Parse the HTML string into a DOM
     let splashesParser = new DOMParser();
@@ -25,13 +26,12 @@ fetch('splashes.md')
     console.log("Parsed DOM:", splashesDoc.body.children);
 
     // Extract all top-level elements (e.g., <p>, <li>)
-    let splashesElements = Array.from(splashesDoc.body.children);
+    let splashesElements = Array.from(splashesDoc.body.children.item(0)!.children);
     console.log("Splashes elements:", splashesElements);
 
     // Extract the innerHTML of each element
-    let splashes: string[] = [];
     splashesElements.forEach(element => {
-      splashes.push(element.innerHTML);
+      splashes.push(element.innerHTML.replace('{{{username}}}', username));
     });
     console.log("Splashes array:", splashes);
 
@@ -53,4 +53,3 @@ fetch('splashes.md')
     console.error("Error loading splashes.md:", error);
   });
 
-feather.replace();
