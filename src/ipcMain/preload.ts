@@ -1,17 +1,21 @@
 import * as Electron from 'electron';
-
-class ElectronApi {
+import {Marked} from 'marked';
+export class ElectronApi {
+    marked: Marked;
+    constructor(){
+        this.marked=new Marked();
+    }
     getCameraPosition() {
         return Electron.ipcRenderer.invoke('get-camera-position');
     }
     pauseGame() {
         
-        pauseGame();
+        this.pauseGame();
         
     }
 
     resumeGame(){
-        resumeGame();
+        this.resumeGame();
     }
     
 }

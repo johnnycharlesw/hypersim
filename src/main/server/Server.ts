@@ -7,10 +7,10 @@ import {
   IEmbedTypeScriptResult
 } from "embed-typescript";
 import ts from "typescript";
+import { Universe } from '../../common/geography/Universe.js';
+import { existsSync } from 'node:fs';
 
-
-
-class Server {
+export class Server {
     configurator: ConfigParser;
     port: number;
     ip: string;
@@ -19,6 +19,7 @@ class Server {
     httpServer: http.Server;
     users: Map<string, string>;
     tsCompiler: EmbedTypeScript;
+    universe: Universe;
     constructor() {
         let args = process.argv.slice(2);
         let configLocationSpecified = args.includes('--config-file');
@@ -31,13 +32,22 @@ class Server {
         this.httpServer=http.createServer(this.httpApp);
 
         this.httpApp.get('/', this.getServerInfo);
-        this.tsCompiler=new EmbedTypeScript()
+        this.tsCompiler=new EmbedTypeScript({
+            "compilerOptions": {
+                
+            }
+        });
         this.io = new socketio.Server(this.httpServer);
         this.users = new Map<string, string>();
 
         
         this.io.on('createAccount', this.createAccount);
         this.io.on('login', this.login);
+        if (!existsSync(this.configurator.config['universe']['path'])) {
+            this.universe = new Universe();
+        } else {
+            this.universe = new Universe();
+        }
     }
 
 

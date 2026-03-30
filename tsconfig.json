@@ -1,5 +1,6 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
+  // ESM: package.json "type": "module" + NodeNext emit; use `.js` in relative import specifiers.
   "compilerOptions": {
     // File Layout
     "rootDir": "./src",
@@ -8,8 +9,12 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "esnext",
     "types": ["node", "electron"],
+    // Also look for type declarations under src/@types in addition to node_modules/@types
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
+
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -41,5 +46,12 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "noEmitOnError": false
-  }
+  },
+  // Renderer .ts is built with webpack (see tsconfig.renderer.json). Keep ambient types here.
+  "include": [
+    "src/main/**/*",
+    "src/ipcMain/**/*",
+    "src/common/**/*",
+    "src/browser/**/*.d.ts"
+  ]
 }

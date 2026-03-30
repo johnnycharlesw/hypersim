@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Simple build script for hypersim
-// - Compiles TypeScript according to tsconfig.json
+// - Compiles main/ipc/common TypeScript (tsconfig.json)
+// - Bundles renderer entries with webpack (webpack.renderer.config.mjs)
 // - Copies static assets from src/static to out
 // - Optional flags:
 //   --clean  : remove the out directory before building
@@ -43,6 +44,42 @@ function copyStatic() {
     force: true,
     filter: (src) => path.extname(src).toLowerCase() !== '.scss'
   });
+
+  // After copying, update importmap in out so browser resolves modules correctly
+  try {
+    updateImportMap();
+  } catch (err) {
+    warn(`updateImportMap failed: ${err && err.message}`);
+  }
+}
+
+function updateImportMap() {
+  const srcImportMap = path.join(staticDir, 'browser', 'importmap.json');
+  const outImportMap = path.join(outDir, 'browser', 'importmap.json');
+  if (!fs.existsSync(srcImportMap)) return;
+  try {
+    const raw = fs.readFileSync(srcImportMap, 'utf8');
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== 'object' || !data.imports) return;
+    let changed = false;
+    for (const key of Object.keys(data.imports)) {
+      const val = data.imports[key];
+      if (typeof val !== 'string') continue;
+      // Replace ../../node_modules/... (from src/static/browser) with ../node_modules/... (from out/browser)
+      const newVal = val.replace(/\.\.\/\.\.\/node_modules\//g, '../node_modules/');
+      if (newVal !== val) {
+        data.imports[key] = newVal;
+        changed = true;
+        log(`importmap: ${key}: ${val} -> ${newVal}`);
+      }
+    }
+    fs.mkdirSync(path.dirname(outImportMap), { recursive: true });
+    fs.writeFileSync(outImportMap, JSON.stringify(data, null, 2), 'utf8');
+    if (changed) log(`updated importmap ${path.relative(projectRoot, outImportMap)}`);
+    else log(`copied importmap to ${path.relative(projectRoot, outImportMap)}`);
+  } catch (err) {
+    warn(`failed to update importmap: ${err && err.message}`);
+  }
 }
 
 function resolveLocalTsc() {
@@ -57,6 +94,70 @@ function resolveTsNodeScript() {
   const scriptPath = path.join(projectRoot, 'node_modules', 'typescript', 'bin', 'tsc');
   if (fs.existsSync(scriptPath)) return scriptPath;
   return null;
+}
+
+function resolveLocalWebpack() {
+  const isWin = process.platform === 'win32';
+  const bin = isWin ? 'webpack.cmd' : 'webpack';
+  const binPath = path.join(projectRoot, 'node_modules', '.bin', bin);
+  if (fs.existsSync(binPath)) return binPath;
+  return null;
+}
+
+function runWebpackOnce() {
+  const configRel = 'webpack.renderer.config.mjs';
+  const args = ['--config', configRel];
+  const localWebpack = resolveLocalWebpack();
+  const isWin = process.platform === 'win32';
+  let res;
+  if (localWebpack) {
+    if (isWin) {
+      const cmdStr = `"${localWebpack}" ${args.join(' ')}`;
+      log(`running: ${cmdStr}`);
+      res = spawnSync(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+    } else {
+      log(`running: ${localWebpack} ${args.join(' ')}`);
+      res = spawnSync(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false });
+    }
+    if (res.status === 0) return res;
+    warn(`local webpack exited with code ${res.status}`);
+  }
+
+  log(`running: ${npxCommand()} webpack ${args.join(' ')}`);
+  res = spawnSync(
+    npxCommand(),
+    ['webpack', ...args],
+    { stdio: 'inherit', cwd: projectRoot, shell: isWin }
+  );
+  return res;
+}
+
+function spawnWebpackWatch() {
+  const configRel = 'webpack.renderer.config.mjs';
+  const args = ['--config', configRel, '--watch'];
+  const localWebpack = resolveLocalWebpack();
+  const isWin = process.platform === 'win32';
+
+  if (isWin) {
+    if (localWebpack) {
+      const cmdStr = `"${localWebpack}" ${args.join(' ')}`;
+      log(`watch: ${cmdStr}`);
+      return spawn(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+    }
+    const npxStr = `${npxCommand()} webpack ${args.join(' ')}`;
+    log(`watch: ${npxStr}`);
+    const child = spawn(npxStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+    child.once('error', (err) => warn(`npx webpack error: ${err && err.message}`));
+    return child;
+  }
+
+  if (localWebpack) {
+    log(`watch: ${localWebpack} ${args.join(' ')}`);
+    return spawn(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false });
+  }
+
+  log(`watch: ${npxCommand()} webpack ${args.join(' ')}`);
+  return spawn(npxCommand(), ['webpack', ...args], { stdio: 'inherit', cwd: projectRoot, shell: false });
 }
 
 function npxCommand() {
@@ -200,6 +301,13 @@ async function buildOnce() {
   log('tsc build done');
   copyStatic();
   await compileScssAll();
+  log('webpack renderer start');
+  const wres = runWebpackOnce();
+  if (wres.status !== 0) {
+    log('webpack renderer failed');
+    process.exit(wres.status || 1);
+  }
+  log('webpack renderer done');
 }
 
 async function buildWatch() {
@@ -234,8 +342,20 @@ async function buildWatch() {
 
   const child = spawnTscWatch(['-p', '.', '--watch', '--preserveWatchOutput']);
 
+  const wpChild = spawnWebpackWatch();
+  wpChild.on('error', (err) => warn(`webpack watch error: ${err && err.message}`));
+  wpChild.on('close', (code) => {
+    log(`webpack watch exited with code ${code}`);
+    process.exit(code ?? 0);
+  });
+
   child.on('close', (code) => {
     log(`tsc watch exited with code ${code}`);
+    try {
+      wpChild.kill('SIGTERM');
+    } catch (_) {
+      /* ignore */
+    }
     process.exit(code ?? 0);
   });
 }

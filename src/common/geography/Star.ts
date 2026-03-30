@@ -1,13 +1,17 @@
 import { InterstellarObject } from "./InterstellarObject.js";
 import { Planet } from "./Planet.js";
-import { ObjectTemperature } from "../objects/index.js";
-import { ObjectPressure } from "../objects/index.js";
-import { ObjectMass } from "../objects/index.js";
-import { Hitbox } from "../objects/index.js";
+import { ObjectTemperature } from "../objects/ObjectTemperature.js";
+import { ObjectPressure } from "../objects/ObjectPressure.js";
+import { ObjectMass } from "../objects/ObjectMass.js";
+import { Hitbox } from "../physics/Hitbox.js";
 export class Star extends InterstellarObject {
     id: number|null = null;
     name: string|null = null;
     planetsOrbiting: Planet[];
+    temperature: ObjectTemperature;
+    pressure: ObjectPressure;
+    mass: ObjectMass;
+    hitbox: Hitbox;
     constructor (){
         super();
         this.temperature = new ObjectTemperature();
