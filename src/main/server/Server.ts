@@ -31,7 +31,7 @@ class Server {
         this.httpServer=http.createServer(this.httpApp);
 
         this.httpApp.get('/', this.getServerInfo);
-        this.tsCompiler=new EmbedTypeScript(IEmbed)
+        this.tsCompiler=new EmbedTypeScript()
         this.io = new socketio.Server(this.httpServer);
         this.users = new Map<string, string>();
 
