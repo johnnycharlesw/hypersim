@@ -30,12 +30,15 @@
     "@types/aframe": "^1.2.9",
     "aframe": "^1.7.1",
     "electron": "^39.2.7",
+    "embed-typescript": "^2.0.1",
+    "express": "^5.2.1",
     "ollama": "^0.6.3",
     "socket.io": "^4.8.3",
     "three": "^0.182.0"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
+    "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
     "@types/three": "^0.182.0",
     "del": "^8.0.1",
