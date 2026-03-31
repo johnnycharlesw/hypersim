@@ -1,6 +1,6 @@
 [server]
 server-ip = "127.0.0.1"
-port = 37008
+port = 35565
 
 [universe]
 path = "universe"

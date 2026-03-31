@@ -28,12 +28,14 @@
   "dependencies": {
     "@iarna/toml": "^2.2.5",
     "@types/aframe": "^1.2.9",
+    "@types/tcp-port-used": "^1.0.4",
     "aframe": "^1.7.1",
     "electron": "^39.2.7",
     "embed-typescript": "^2.0.1",
     "express": "^5.2.1",
     "ollama": "^0.6.3",
     "socket.io": "^4.8.3",
+    "tcp-port-used": "^1.0.2",
     "three": "^0.182.0"
   },
   "devDependencies": {

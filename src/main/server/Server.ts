@@ -9,6 +9,7 @@ import {
 import ts from "typescript";
 import { Universe } from '../../common/geography/Universe.js';
 import { existsSync } from 'node:fs';
+import { MultiplayerEmbedTypecriptConfig } from './MultiplayerEmbedTypescriptConfig.js';
 
 export class Server {
     configurator: ConfigParser;
@@ -32,14 +33,9 @@ export class Server {
         this.httpServer=http.createServer(this.httpApp);
 
         this.httpApp.get('/', this.getServerInfo);
-        this.tsCompiler=new EmbedTypeScript({
-            "compilerOptions": {
-                
-            }
-        });
+        this.tsCompiler=new EmbedTypeScript(new MultiplayerEmbedTypecriptConfig());
         this.io = new socketio.Server(this.httpServer);
         this.users = new Map<string, string>();
-
         
         this.io.on('createAccount', this.createAccount);
         this.io.on('login', this.login);
