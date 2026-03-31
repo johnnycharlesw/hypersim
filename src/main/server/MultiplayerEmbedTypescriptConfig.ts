@@ -6,6 +6,7 @@ class compilerOptions implements CompilerOptions {
     target?: ScriptTarget;
     strict?: boolean;
     jsx?: JsxEmit;
+    [key: string]: any;
     verbatimModuleSyntax?: boolean;
     isolatedModules?: boolean;
     noUncheckedSideEffectImports?: boolean;
@@ -22,14 +23,16 @@ class compilerOptions implements CompilerOptions {
 }
 export class MultiplayerEmbedTypecriptConfig implements IEmbedTypeScriptProps {
     compilerOptions: CompilerOptions;
+    
     external: Record<string, string>;
     constructor(){
         this.compilerOptions=new compilerOptions();
         this.external = {};
         fs.readdirSync('out').forEach(file => {
-            this.external!.concat({
-                file
-            })
+            this.external = {
+                file: file,
+                ...this.external
+            }
         });
     }
 }

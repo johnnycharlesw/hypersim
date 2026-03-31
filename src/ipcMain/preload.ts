@@ -1,9 +1,9 @@
 import * as Electron from 'electron';
-import {Marked} from 'marked';
+//import {Marked} from 'marked';
 export class ElectronApi {
-    marked: Marked;
+    //marked: Marked;
     constructor(){
-        this.marked=new Marked();
+        //this.marked=new Marked();
     }
     getCameraPosition() {
         return Electron.ipcRenderer.invoke('get-camera-position');
