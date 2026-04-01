@@ -17,11 +17,11 @@ export class HypersimComponent implements Component<any, System<any>>{
     constructor(){
         this.schema={
             "server": {
-                "default": "127.0.0.1:37008"
+                "default": "127.0.0.1:35565"
             }
         };
         this.data={
-            "server": "127.0.0.1:37008"
+            "server": "127.0.0.1:35565"
         };
         this.id = "hypersim";
         this.initialized=false;
