@@ -4,3 +4,8 @@ port = 35565
 
 [universe]
 path = "universe"
+
+[client]
+fov = 60
+freecam = false
+username = "FocusPup824"

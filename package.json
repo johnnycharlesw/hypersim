@@ -33,10 +33,13 @@
     "electron": "^39.2.7",
     "embed-typescript": "^2.0.1",
     "express": "^5.2.1",
+    "feather-icons": "^4.29.2",
+    "marked": "^17.0.5",
     "ollama": "^0.6.3",
     "socket.io": "^4.8.3",
     "tcp-port-used": "^1.0.2",
-    "three": "^0.182.0"
+    "three": "^0.182.0",
+    "ts-loader": "^9.5.4"
   },
   "devDependencies": {
     "@types/electron": "^1.4.38",
@@ -49,7 +52,8 @@
     "gulp-typescript": "^6.0.0-alpha.1",
     "merge-stream": "^2.0.0",
     "sass": "^1.97.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "webpack-cli": "^7.0.2"
   },
   "engines": {
     "node": ">=18"
