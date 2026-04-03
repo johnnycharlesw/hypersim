@@ -30,7 +30,7 @@
     "@types/aframe": "^1.2.9",
     "@types/tcp-port-used": "^1.0.4",
     "aframe": "^1.7.1",
-    "electron": "^39.2.7",
+    "electron": "^39.8.3",
     "embed-typescript": "^2.0.1",
     "express": "^5.2.1",
     "feather-icons": "^4.29.2",
