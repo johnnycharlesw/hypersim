@@ -19,26 +19,6 @@ export class UniverseGenerator {
   }
   genUniverse(server: Server): Universe {
     
-    // Open the Electron.js window
-        Electron.app.on('ready', ()=>{
-
-            const indexPath = path.join(__dirname, '..', '..', 'browser', 'generating.html');
-
-            mainWindow = new Electron.BrowserWindow({
-                width: 800,
-                height: 600,
-                frame:true,
-                autoHideMenuBar: true,
-                titleBarOverlay: true,
-                webPreferences: {
-                    preload: preloadPath,
-                    sandbox: false,
-                    contextIsolation: true,
-                    nodeIntegration: false
-                }
-            });
-            mainWindow.loadFile(indexPath);
-        });
     let universe: Universe = server.universe;
     let galaxyClusterCount = this.dice.randomIntBetween(5,15);
     for (let galaxyClusterId = 0; galaxyClusterId < galaxyClusterCount; galaxyClusterId++) {
@@ -69,7 +49,6 @@ export class UniverseGenerator {
         }
         universe.addGalaxyCluster(galaxyCluster);
     }
-    mainWindow?.close();
     server.universe = universe;
     return universe;
   }
