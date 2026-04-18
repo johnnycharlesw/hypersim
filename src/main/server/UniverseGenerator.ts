@@ -30,7 +30,7 @@ export class UniverseGenerator {
             console.log(`Generating galaxy ${galaxyId} in galaxy cluster ${galaxyClusterId}`);
             let galaxy = new Galaxy();
             galaxy.id=galaxyId;
-            let starCount = this.dice.randomIntBetween(1000,10000);
+            let starCount = this.dice.randomIntBetween(1000,5000);
             for (let starId=0; starId<starCount; starId++) {
               console.log(`Generating star ${starId} in galaxy ${galaxyId}`);
               let star = new Star();

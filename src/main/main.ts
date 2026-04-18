@@ -88,7 +88,8 @@ function showSetupScreen(){
         continue;
     }
     mainWindow?.close();
-    _main();
+    Electron.app.relaunch();
+    Electron.app.exit();
 }
 
 function _main(){
