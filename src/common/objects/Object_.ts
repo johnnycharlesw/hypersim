@@ -3,6 +3,8 @@ import { ObjectTemperature } from './ObjectTemperature.js';
 import { ObjectPressure } from './ObjectPressure.js';
 import { ObjectMass } from './ObjectMass.js';
 import { Hitbox } from '../physics/Hitbox.js';
+import { AtomicGrid3D } from './models/AtomicGrid3D.js';
+import { StatesOfMatter } from './models/StatesOfMatter.js';
 export class Object_ { // _ at the end to avoid conflicts with built-in JavaScript objects
     temperature: ObjectTemperature;
     pressure: ObjectPressure;
@@ -10,6 +12,7 @@ export class Object_ { // _ at the end to avoid conflicts with built-in JavaScri
     hitbox: Hitbox;
     size: Vector3D; // Assuming the object is a cube for simplicity (actually, it kind of always is)
     position: Vector3D;
+    model: AtomicGrid3D;
     constructor () {
         this.temperature = new ObjectTemperature();
         this.pressure = new ObjectPressure();
@@ -17,6 +20,7 @@ export class Object_ { // _ at the end to avoid conflicts with built-in JavaScri
         this.hitbox = new Hitbox();
         this.size = new Vector3D(0, 0, 0); // Assuming the object is a cube for simplicity
         this.position = new Vector3D(0, 0, 0);
+        this.model=new AtomicGrid3D(1,1,1,StatesOfMatter.Solid);
     }
 
     pushAround(position: Vector3D) {

@@ -1,4 +1,4 @@
-export class RNG {
+export class Dice {
     seed: number;
     constructor(seed: number|null){
         if (seed) {

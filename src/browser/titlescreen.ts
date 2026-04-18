@@ -1,4 +1,4 @@
-import { RNG } from '../common/randomness/RNG.js';
+import { Dice } from '../common/randomness/Dice.js';
 import * as marked from 'marked';
 import {feather} from 'feather-icons';
 
@@ -36,7 +36,7 @@ fetch('splashes.md')
     console.log("Splashes array:", splashes);
 
     // Select a random splash
-    let dice = new RNG(null);
+    let dice = new Dice(null);
     let splashIndex = dice.randomIntBetween(0, splashes.length - 1);
     console.log("Random index:", splashIndex);
 

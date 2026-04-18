@@ -6,6 +6,8 @@
 // - Optional flags:
 //   --clean  : remove the out directory before building
 //   --watch  : run tsc in watch mode and watch/copy static assets on changes
+//   --minify : production webpack (minified renderer), compressed CSS, minified main/ipc/common JS
+//              (tsc emits without .js source maps; use --clean if switching from a dev build)
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,6 +22,8 @@ const staticDir = path.join(projectRoot, 'src', 'static');
 const args = process.argv.slice(2);
 const isWatch = args.includes('--watch');
 const isClean = args.includes('--clean');
+const isNoMinify = args.includes('--no-minify');
+const isMinify = !isNoMinify;
 
 function log(msg) {
   console.log(`[build] ${msg}`);
@@ -104,20 +108,27 @@ function resolveLocalWebpack() {
   return null;
 }
 
+function webpackChildEnv() {
+  const env = { ...process.env };
+  if (isMinify) env.NODE_ENV = 'production';
+  return env;
+}
+
 function runWebpackOnce() {
   const configRel = 'webpack.renderer.config.mjs';
   const args = ['--config', configRel];
   const localWebpack = resolveLocalWebpack();
   const isWin = process.platform === 'win32';
+  const childEnv = webpackChildEnv();
   let res;
   if (localWebpack) {
     if (isWin) {
       const cmdStr = `"${localWebpack}" ${args.join(' ')}`;
       log(`running: ${cmdStr}`);
-      res = spawnSync(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+      res = spawnSync(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true, env: childEnv });
     } else {
       log(`running: ${localWebpack} ${args.join(' ')}`);
-      res = spawnSync(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false });
+      res = spawnSync(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false, env: childEnv });
     }
     if (res.status === 0) return res;
     warn(`local webpack exited with code ${res.status}`);
@@ -127,7 +138,7 @@ function runWebpackOnce() {
   res = spawnSync(
     npxCommand(),
     ['webpack', ...args],
-    { stdio: 'inherit', cwd: projectRoot, shell: isWin }
+    { stdio: 'inherit', cwd: projectRoot, shell: isWin, env: childEnv }
   );
   return res;
 }
@@ -137,27 +148,28 @@ function spawnWebpackWatch() {
   const args = ['--config', configRel, '--watch'];
   const localWebpack = resolveLocalWebpack();
   const isWin = process.platform === 'win32';
+  const childEnv = webpackChildEnv();
 
   if (isWin) {
     if (localWebpack) {
       const cmdStr = `"${localWebpack}" ${args.join(' ')}`;
       log(`watch: ${cmdStr}`);
-      return spawn(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+      return spawn(cmdStr, { stdio: 'inherit', cwd: projectRoot, shell: true, env: childEnv });
     }
     const npxStr = `${npxCommand()} webpack ${args.join(' ')}`;
     log(`watch: ${npxStr}`);
-    const child = spawn(npxStr, { stdio: 'inherit', cwd: projectRoot, shell: true });
+    const child = spawn(npxStr, { stdio: 'inherit', cwd: projectRoot, shell: true, env: childEnv });
     child.once('error', (err) => warn(`npx webpack error: ${err && err.message}`));
     return child;
   }
 
   if (localWebpack) {
     log(`watch: ${localWebpack} ${args.join(' ')}`);
-    return spawn(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false });
+    return spawn(localWebpack, args, { stdio: 'inherit', cwd: projectRoot, shell: false, env: childEnv });
   }
 
   log(`watch: ${npxCommand()} webpack ${args.join(' ')}`);
-  return spawn(npxCommand(), ['webpack', ...args], { stdio: 'inherit', cwd: projectRoot, shell: false });
+  return spawn(npxCommand(), ['webpack', ...args], { stdio: 'inherit', cwd: projectRoot, shell: false, env: childEnv });
 }
 
 function npxCommand() {
@@ -276,13 +288,16 @@ async function compileScssAll() {
   }
   if (scssFiles.length === 0) return;
 
+  const style = isMinify ? 'compressed' : 'expanded';
+  const sourceMap = !isMinify;
+
   for (const file of scssFiles) {
     const rel = path.relative(staticDir, file);
     const outCssRel = rel.replace(/\.scss$/i, '.css');
     const outCssPath = path.join(outDir, outCssRel);
     fs.mkdirSync(path.dirname(outCssPath), { recursive: true });
     try {
-      const result = sass.compile(file, { style: 'expanded', sourceMap: true });
+      const result = sass.compile(file, { style, sourceMap });
       fs.writeFileSync(outCssPath, result.css, 'utf8');
       log(`scss: ${path.relative(projectRoot, file)} -> ${path.relative(projectRoot, outCssPath)}`);
     } catch (err) {
@@ -291,14 +306,94 @@ async function compileScssAll() {
   }
 }
 
+const TSC_EMIT_SUBDIRS = ['main', 'ipcMain', 'common'];
+
+function removeStaleMapsUnderTscEmit() {
+  if (!isMinify || !fs.existsSync(outDir)) return;
+  for (const sub of TSC_EMIT_SUBDIRS) {
+    const root = path.join(outDir, sub);
+    if (!fs.existsSync(root)) continue;
+    for (const file of walkDir(root)) {
+      const ext = path.extname(file).toLowerCase();
+      if (ext === '.map') {
+        try {
+          fs.unlinkSync(file);
+        } catch (err) {
+          warn(`failed to remove stale map ${file}: ${err && err.message}`);
+        }
+      }
+    }
+  }
+}
+
+async function minifyTscJsOutputs() {
+  if (!isMinify) return;
+  let esbuild;
+  try {
+    esbuild = await import('esbuild');
+  } catch (err) {
+    warn(`esbuild not found (npm i -D esbuild): skipping Node emit minify — ${err && err.message}`);
+    return;
+  }
+  const transform = esbuild.transform;
+  if (typeof transform !== 'function') {
+    warn('esbuild.transform missing; skipping Node emit minify');
+    return;
+  }
+  for (const sub of TSC_EMIT_SUBDIRS) {
+    const root = path.join(outDir, sub);
+    if (!fs.existsSync(root)) continue;
+    for (const file of walkDir(root)) {
+      if (path.extname(file).toLowerCase() !== '.js') continue;
+      let code;
+      try {
+        code = fs.readFileSync(file, 'utf8');
+      } catch (err) {
+        warn(`read failed ${file}: ${err && err.message}`);
+        continue;
+      }
+      try {
+        const result = await transform(code, {
+          loader: 'js',
+          minify: true,
+          legalComments: 'none',
+          target: 'esnext',
+        });
+        if (result.code) fs.writeFileSync(file, result.code, 'utf8');
+      } catch (err) {
+        warn(`minify failed ${file}: ${err && err.message}`);
+      }
+    }
+  }
+  log('minify: tsc emit (main/ipcMain/common) done');
+}
+
+function tscArgsOnce() {
+  const a = ['-p', '.'];
+  if (isMinify) {
+    a.push('--sourceMap', 'false', '--declarationMap', 'false');
+  }
+  return a;
+}
+
+function tscArgsWatch() {
+  const a = ['-p', '.', '--watch', '--preserveWatchOutput'];
+  if (isMinify) {
+    a.push('--sourceMap', 'false', '--declarationMap', 'false');
+  }
+  return a;
+}
+
 async function buildOnce() {
+  if (isMinify) log('minified production build (--minify)');
   log('tsc build start');
-  const res = runTscOnce(['-p', '.']);
+  const res = runTscOnce(tscArgsOnce());
   if (res.status !== 0) {
     log('tsc build failed');
     process.exit(res.status || 1);
   }
   log('tsc build done');
+  removeStaleMapsUnderTscEmit();
   copyStatic();
   await compileScssAll();
   log('webpack renderer start');
@@ -308,11 +403,18 @@ async function buildOnce() {
     process.exit(wres.status || 1);
   }
   log('webpack renderer done');
+  await minifyTscJsOutputs();
 }
 
 async function buildWatch() {
   log('tsc watch start');
+  if (isMinify) {
+    warn(
+      'watch + --minify: webpack/CSS use production settings; main/ipc/common JS is not re-minified on each tsc rebuild (run a full build without --watch for minified Node output).'
+    );
+  }
   copyStatic();
+  removeStaleMapsUnderTscEmit();
   await compileScssAll();
 
   if (fs.existsSync(staticDir)) {
@@ -340,7 +442,7 @@ async function buildWatch() {
     }
   }
 
-  const child = spawnTscWatch(['-p', '.', '--watch', '--preserveWatchOutput']);
+  const child = spawnTscWatch(tscArgsWatch());
 
   const wpChild = spawnWebpackWatch();
   wpChild.on('error', (err) => warn(`webpack watch error: ${err && err.message}`));

@@ -8,14 +8,8 @@ export class ElectronApi {
     getCameraPosition() {
         return Electron.ipcRenderer.invoke('get-camera-position');
     }
-    pauseGame() {
-        
-        this.pauseGame();
-        
-    }
-
-    resumeGame(){
-        this.resumeGame();
+    createConfig(config: any){
+      return Electron.ipcRenderer.invoke('create-config', config);
     }
     
 }

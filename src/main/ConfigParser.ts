@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import toml from '@iarna/toml';
 import { join } from 'path';
-
 export class ConfigParser {
     configFile: string = 'game.config.toml';
     config: any;

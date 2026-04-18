@@ -15,9 +15,12 @@ class LocalDiscoverer {
                         let ip = x.toString() + "." + y.toString() + "." + z.toString() + "." + a.toString();
                         let tcpCheck = tcpPortUsed.check(this.port, ip);
                         tcpCheck.then(function (found){
+                            console.log(`Found Hypersim server at ${x}.${y}.${z}.${a}`);
                             discovered.concat(new Vector4D(x,y,z,a));
                         });
-                        tcpCheck.catch(function (failed){});
+                        tcpCheck.catch(function (failed){
+                            console.log(`Did not find Hypersim server at ${x}.${y}.${z}.${a}`)
+                        });
                     }
                 }
             }
