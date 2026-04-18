@@ -22,7 +22,7 @@ export class UniverseGenerator {
     // Open the Electron.js window
         Electron.app.on('ready', ()=>{
 
-            const indexPath = path.join(__dirname, '..', '..', 'browser', 'index.html');
+            const indexPath = path.join(__dirname, '..', '..', 'browser', 'generating.html');
 
             mainWindow = new Electron.BrowserWindow({
                 width: 800,
@@ -69,7 +69,7 @@ export class UniverseGenerator {
         }
         universe.addGalaxyCluster(galaxyCluster);
     }
-    mainWindow!.close();
+    mainWindow?.close();
     server.universe = universe;
     return universe;
   }
