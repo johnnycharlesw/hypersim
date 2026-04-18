@@ -18,8 +18,7 @@ export class UniverseGenerator {
     this.dice=new Dice(null);
   }
   genUniverse(server: Server): Universe {
-    
-    let universe: Universe = server.universe;
+    console.log("Generating universe");
     let galaxyClusterCount = this.dice.randomIntBetween(5,15);
     for (let galaxyClusterId = 0; galaxyClusterId < galaxyClusterCount; galaxyClusterId++) {
         console.log(`Generating galaxy cluster ${galaxyClusterId}`);
@@ -30,26 +29,32 @@ export class UniverseGenerator {
             console.log(`Generating galaxy ${galaxyId} in galaxy cluster ${galaxyClusterId}`);
             let galaxy = new Galaxy();
             galaxy.id=galaxyId;
+            console.log(`Generating stars for galaxy ${galaxyId} in galaxy cluster ${galaxyClusterId}`);
             let starCount = this.dice.randomIntBetween(1000,5000);
             for (let starId=0; starId<starCount; starId++) {
               console.log(`Generating star ${starId} in galaxy ${galaxyId}`);
               let star = new Star();
               star.id=starId;
+              console.log(`Generating planets for star ${starId} in galaxy ${galaxyId}`);
               let planetCount = this.dice.randomIntBetween(0,8);
               for (let planetId = 0; planetId < planetCount; planetId++) {
                 console.log(`Generating planet ${planetId} orbiting star ${starId}`);
                 let planet = new Planet();
                 planet.id=planetId;
+                console.log(`Sending planet ${planetId} into orbitation of star ${starId}`);
                 star.sendNewPlanetIntoOrbitation(planet);
-                
+                console.log(`Generated planet ${planetId} orbiting star ${starId}`)
               }
               galaxy.addStar(star);
+              console.log(`Generated star ${starId} in galaxy ${galaxyId}`);
             }
             galaxyCluster.addGalaxy(galaxy);
+            console.log(`Generated galaxy ${galaxyId} in galaxy cluster ${galaxyClusterId}`);
         }
-        universe.addGalaxyCluster(galaxyCluster);
+        console.log(`Generated galaxy cluster ${galaxyClusterId}`);
+        server.universe.addGalaxyCluster(galaxyCluster);
     }
-    server.universe = universe;
-    return universe;
+    console.log('Generated universe');
+    return server.universe;
   }
 }
