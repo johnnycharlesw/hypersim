@@ -21,4 +21,4 @@
 * JoeBiden
 * YoMama
 * YoPapa
-* SkibidiToilets
+* SkibidiToilet

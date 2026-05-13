@@ -16,7 +16,7 @@ The following usernames are **reserved exclusively** for Hypersim's first public
  | AuntDi            | Aunt Diana                            | Hypersim (Original)        |
  | TimesNewGrandpa   | Grandpa John                          | Hypersim (Original)        |
  | CanoliCake123     | Grandma Linda                         | Minecraft                  |
- | MsGelber          | School Aid                            | Hypersim (Original)        |
+ | cupcakelover1010          | School Aid                            | Email        |
  | Garebear          | Friend (Garrett)                      | Fortnite                   |
  | Amtraker          | Nice Amtrak conductor (Family memory)  | Hypersim (Original)       |
  | spewdog | FocusPup824's favorite YouTuber/era999's friend | YouTube |
