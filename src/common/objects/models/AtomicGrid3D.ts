@@ -25,6 +25,6 @@ export class AtomicGrid3D extends Grid3D {
         });
 
         // return voxelCount * server.voxelDensity;
-        return 0;
+        return voxelCount * 0.000000001;
     }
 }
